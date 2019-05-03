@@ -4,7 +4,6 @@ package com.noteSaver.notesaver.controller;
 import com.noteSaver.notesaver.exception.ResourceNotFoundException;
 import com.noteSaver.notesaver.model.Note;
 import com.noteSaver.notesaver.repository.NoteRepository;
-import com.noteSaver.notesaver.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,8 +22,6 @@ public class NoteController {
 
     @Autowired
     NoteRepository noteRepository;
-    @Autowired
-    NoteService noteService;
 
     // Get All Notes
     @GetMapping("/notes")
@@ -33,8 +30,8 @@ public class NoteController {
     }
 
     @RequestMapping("/notes/all/{email}")
-    public List<Note> getAllNotesUsers(@PathVariable(value = "email") String email) {
-        return noteService.findByEmail(email);
+    public List<Note> getAllNotesOfUser(@PathVariable(value = "email") String email) {
+        return noteRepository.findByEmail(email);
 
     }
 

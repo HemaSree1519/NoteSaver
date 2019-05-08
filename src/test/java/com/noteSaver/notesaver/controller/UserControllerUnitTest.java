@@ -30,7 +30,7 @@ public class UserControllerUnitTest {
     private UserController userController;
 
     @Test
-    public void givenUser_whenGetUserWithEmail_thenReturnUser() throws Exception{
+    public void givenValidUserEmail_whenGetUserWithEmail_thenReturnUser() throws Exception{
         User user = new User();
         user.setEmail("testMail@gmail.com");
         when(userController.getUserByEmail("testMail@gmail.com")).thenReturn(user);

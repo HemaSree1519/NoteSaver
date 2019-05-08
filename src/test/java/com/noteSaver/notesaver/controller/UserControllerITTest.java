@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static junit.framework.TestCase.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = NoteSaverApplication.class,
@@ -40,6 +40,24 @@ public class UserControllerITTest {
                 "http://localhost:" + port + "/notesaver/users/add",
                 HttpMethod.POST, entity, String.class);
         assertEquals(HttpStatus.OK.value(), response.getStatusCodeValue());
+    }
+
+    @Test
+    public void getUserByEmailTest() {
+        User user = new User();
+        user.setEmail("tester5@gmail.com");
+        user.setUserName("tester");
+        user.setPassword("password");
+        user.setRole("admin");
+        HttpEntity<User> entity = new HttpEntity<>(user, headers);
+        ResponseEntity<String> postApiResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/notesaver/users/add",
+                HttpMethod.POST, entity, String.class);
+        HttpEntity<User> entityForGetApi = new HttpEntity<>(null, headers);
+        ResponseEntity<String> getApiResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/notesaver/users/tester5@gmail.com",
+                HttpMethod.GET, entityForGetApi, String.class);
+        assertEquals(postApiResponse.getBody(), getApiResponse.getBody());
     }
 }
 

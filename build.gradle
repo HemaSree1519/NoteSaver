@@ -20,6 +20,7 @@ repositories {
 }
 
 dependencies {
+	compile("com.h2database:h2:1.4.191")
 	compile("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -31,4 +32,6 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
+	testCompile 'org.junit.jupiter:junit-jupiter-engine:5.2.0'
+	testCompile('org.mockito:mockito-junit-jupiter:2.23.0')
 }

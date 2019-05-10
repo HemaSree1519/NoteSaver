@@ -43,7 +43,7 @@ public class NoteControllerUnitTest {
     }
 
     @Test
-    public void givenNote_whenAddNote_thenReturnOKResponse() throws Exception {
+    public void givenNote_whenAddNote_thenReturnSuccessResponse() throws Exception {
         when(noteController.createNote(Mockito.any(Note.class))).thenReturn(note);
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post("/notesaver/notes/add")
@@ -66,7 +66,16 @@ public class NoteControllerUnitTest {
     }
 
     @Test
-    public void givenEditedNote_whenUpdateNote_thenReturnSuccessUpdatedResponse(){
-
+    public void givenEditedNote_whenUpdateNote_thenReturnSuccessUpdatedResponse() throws Exception {
+        note.setTitle("Updated title");
+        String updatedNoteJson = "{\"id\":1,\"title\":\"TestTitle\",\"content\":\"This is a testing note\"," +
+                "\"email\":\"tester@gmail.com\",\"updatedAt\":null,\"createdAt\":null}";
+        when(noteController.updateNote((long) 1, note)).thenReturn(note);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .put("/notesaver/notes/1/update")
+                .accept(MediaType.APPLICATION_JSON).content(updatedNoteJson)
+                .contentType(MediaType.APPLICATION_JSON);
+        MvcResult result = mvc.perform(requestBuilder).andReturn();
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
     }
 }

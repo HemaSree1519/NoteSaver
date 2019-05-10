@@ -5,7 +5,8 @@ import com.noteSaver.notesaver.exception.ResourceNotFoundException;
 import com.noteSaver.notesaver.model.Note;
 import com.noteSaver.notesaver.repository.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,12 +24,6 @@ public class NoteController {
     @Autowired
     NoteRepository noteRepository;
 
-    // Get All Notes
-    @GetMapping("/notes")
-    public List<Note> getAllNotes() {
-        return noteRepository.findAll();
-    }
-
     @RequestMapping("/notes/all/{email}")
     public List<Note> getAllNotesOfUser(@PathVariable(value = "email") String email) {
         return noteRepository.findByEmail(email);
@@ -39,13 +34,6 @@ public class NoteController {
     @PostMapping("/notes/add")
     public Note createNote(@Valid @RequestBody Note note) {
         return noteRepository.save(note);
-    }
-
-    // Get a Single Note
-    @RequestMapping("/notes/{id}")
-    public Note getNoteById(@PathVariable(value = "id") Long noteId) {
-        return noteRepository.findById(noteId)
-                .orElseThrow(() -> new ResourceNotFoundException("Note", "id", noteId));
     }
 
     // Update a Note
@@ -60,5 +48,19 @@ public class NoteController {
         note.setContent(noteDetails.getContent());
 
         return noteRepository.save(note);
+    }
+
+    // Delete a Note
+    @DeleteMapping("/notes/{email}/{id}/delete")
+    public ResponseEntity<?> deleteNote(@PathVariable(value = "id") Long noteId, @PathVariable(value = "email") String email) {
+        Note note = noteRepository.findById(noteId)
+                .orElseThrow(() -> new ResourceNotFoundException("Note", "id", noteId));
+        if(note.getEmail().equals(email))
+        {
+            noteRepository.delete(note);
+            return ResponseEntity.ok().build();
+        }
+        else throw new ResourceNotFoundException("Note", "id", noteId);
+
     }
 }

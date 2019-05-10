@@ -21,44 +21,35 @@ public class User implements Serializable {
 
     private String role;
 
-
-    public void setUserName(String userNameData)
-    {
-        userName=userNameData;
-    }
-
-    public void setRole(String roleData)
-    {
-        role=roleData;
-    }
-
-    public void setPassword(String passwordData)
-    {
-        password=passwordData;
-    }
-
-    public void setEmail(String contentEmail)
-    {
-        email=contentEmail;
-    }
-
-    public String getEmail()
-    {
+    public String getEmail() {
         return email;
     }
 
-    public String getPassword()
-    {
+    public void setEmail(String contentEmail) {
+        email = contentEmail;
+    }
+
+    public String getPassword() {
         return password;
     }
 
-    public String getRole()
-    {
+    public void setPassword(String passwordData) {
+        password = passwordData;
+    }
+
+    public String getRole() {
         return role;
     }
 
-    public String getUserName()
-    {
+    public void setRole(String roleData) {
+        role = roleData;
+    }
+
+    public String getUserName() {
         return userName;
+    }
+
+    public void setUserName(String userNameData) {
+        userName = userNameData;
     }
 }

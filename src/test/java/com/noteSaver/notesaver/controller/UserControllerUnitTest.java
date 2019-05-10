@@ -30,25 +30,25 @@ public class UserControllerUnitTest {
     private UserController userController;
 
     @Test
-    public void givenValidUserEmail_whenGetUserWithEmail_thenReturnUser() throws Exception{
+    public void givenValidUserEmail_whenGetUserWithEmail_thenReturnUser() throws Exception {
         User user = new User();
         user.setEmail("testMail@gmail.com");
         when(userController.getUserByEmail("testMail@gmail.com")).thenReturn(user);
-       MvcResult mvcResult= mvc.perform(MockMvcRequestBuilders.get("/notesaver/users/testMail@gmail.com")
-        .contentType(MediaType.APPLICATION_JSON)).andReturn();
-       String expectedResult="{\"userName\":null,\"password\":null,\"email\":\"testMail@gmail.com\",\"role\":null}";
-       String returnedResult =mvcResult.getResponse().getContentAsString();
-        JSONAssert.assertEquals(expectedResult,returnedResult,false);
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/notesaver/users/testMail@gmail.com")
+                .contentType(MediaType.APPLICATION_JSON)).andReturn();
+        String expectedResult = "{\"userName\":null,\"password\":null,\"email\":\"testMail@gmail.com\",\"role\":null}";
+        String returnedResult = mvcResult.getResponse().getContentAsString();
+        JSONAssert.assertEquals(expectedResult, returnedResult, false);
     }
 
     @Test
-    public void givenUser_whenAddUser_thenReturnOkResponse() throws Exception{
+    public void givenUser_whenAddUser_thenReturnOkResponse() throws Exception {
         User user = new User();
         user.setEmail("tester@gmail.com");
         user.setUserName("tester");
         user.setPassword("password");
         user.setRole("admin");
-        String inputJson ="{\"userName\":\"tester\",\"password\":\"password\"," +
+        String inputJson = "{\"userName\":\"tester\",\"password\":\"password\"," +
                 "\"email\":\"tester@gmail.com\",\"role\":\"admin\"}";
         when(userController.createUser(Mockito.any(User.class))).thenReturn(user);
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -59,6 +59,6 @@ public class UserControllerUnitTest {
         MockHttpServletResponse response = result.getResponse();
         String responseResult = response.getContentAsString();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(inputJson,responseResult);
+        assertEquals(inputJson, responseResult);
     }
 }

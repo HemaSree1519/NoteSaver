@@ -31,7 +31,7 @@ public class UserControllerITTest {
     @Test
     public void createUserTest() {
         User user = new User();
-        user.setEmail("tester3@gmail.com");
+        user.setEmail("tester@gmail.com");
         user.setUserName("tester");
         user.setPassword("password");
         user.setRole("admin");
@@ -45,7 +45,7 @@ public class UserControllerITTest {
     @Test
     public void getUserByEmailTest() {
         User user = new User();
-        user.setEmail("tester5@gmail.com");
+        user.setEmail("tester2@gmail.com");
         user.setUserName("tester");
         user.setPassword("password");
         user.setRole("admin");
@@ -55,7 +55,7 @@ public class UserControllerITTest {
                 HttpMethod.POST, entity, String.class);
         HttpEntity<User> entityForGetApi = new HttpEntity<>(null, headers);
         ResponseEntity<String> getApiResponse = restTemplate.exchange(
-                "http://localhost:" + port + "/notesaver/users/tester5@gmail.com",
+                "http://localhost:" + port + "/notesaver/users/tester2@gmail.com",
                 HttpMethod.GET, entityForGetApi, String.class);
         assertEquals(postApiResponse.getBody(), getApiResponse.getBody());
     }

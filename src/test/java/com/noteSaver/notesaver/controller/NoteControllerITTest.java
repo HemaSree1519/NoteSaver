@@ -16,6 +16,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -53,43 +54,50 @@ public class NoteControllerITTest {
     }
 
     @Test
-    public void getAllNotesTest() {
-        HttpEntity<Note> entity = new HttpEntity<>(note, headers);
-        ResponseEntity<String> postApiResponse = restTemplate.exchange(
-                "http://localhost:" + port + "/notesaver/notes/add",
-                HttpMethod.POST, entity, String.class);
-
-        HttpEntity<Note> entityForGetApi = new HttpEntity<>(null, headers);
-        ResponseEntity<String> getApiResponse = restTemplate.exchange(
-                "http://localhost:" + port + "/notesaver/notes",
-                HttpMethod.GET, entityForGetApi, String.class);
-        assertEquals(HttpStatus.OK.value(), getApiResponse.getStatusCodeValue());
-    }
-
-    @Test
     public void getAllNotesOfUserTest() {
-        HttpEntity<Note> entity = new HttpEntity<>(note, headers);
-        ResponseEntity<String> postApiResponse = restTemplate.exchange(
-                "http://localhost:" + port + "/notesaver/notes/add",
-                HttpMethod.POST, entity, String.class);
-
         HttpEntity<Note> entityForGetApi = new HttpEntity<>(null, headers);
-        ResponseEntity<String> getApiResponse = restTemplate.exchange(
+        ResponseEntity<String> getSuccessApiResponse = restTemplate.exchange(
                 "http://localhost:" + port + "/notesaver/notes/all/tester@gmail.com",
                 HttpMethod.GET, entityForGetApi, String.class);
-        assertEquals(HttpStatus.OK.value(), getApiResponse.getStatusCodeValue());
+        ResponseEntity<String> getFailedApiResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/notesaver/notes/all/failedMail@gmail.com",
+                HttpMethod.GET, entityForGetApi, String.class);
+        assertEquals(HttpStatus.OK.value(), getSuccessApiResponse.getStatusCodeValue());
+        assertEquals(2, Objects.requireNonNull(getSuccessApiResponse.getBody()).length());
     }
 
     @Test
-    public void getNoteById() {
+    public void updateNoteTest() {
         HttpEntity<Note> entity = new HttpEntity<>(note, headers);
-        ResponseEntity<String> postApiResponse = restTemplate.exchange(
+        ResponseEntity<String> response = restTemplate.exchange(
                 "http://localhost:" + port + "/notesaver/notes/add",
                 HttpMethod.POST, entity, String.class);
+        note.setTitle("Update Title");
+        ResponseEntity<String> getSuccessApiResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/notesaver/notes/1/update",
+                HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> getFailedApiResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/notesaver/notes/2/update",
+                HttpMethod.PUT, entity, String.class);
+        assertEquals(HttpStatus.OK.value(), getSuccessApiResponse.getStatusCodeValue());
+        assertEquals(HttpStatus.NOT_FOUND.value(), getFailedApiResponse.getStatusCodeValue());
 
-        HttpEntity<Note> entityForGetApi = new HttpEntity<>(null, headers);
-        ResponseEntity<String> getApiResponse = restTemplate.exchange(
-                "http://localhost:" + port + "/notesaver/notes/1",
-                HttpMethod.GET, entityForGetApi, String.class);
+    }
+
+    @Test
+    public void deleteNoteTest() {
+        HttpEntity<Note> entity = new HttpEntity<>(note, headers);
+        ResponseEntity<String> response = restTemplate.exchange(
+                "http://localhost:" + port + "/notesaver/notes/add",
+                HttpMethod.POST, entity, String.class);
+        ResponseEntity<String> getSuccessApiResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/notesaver/notes/tester@gmail.com/1/delete",
+                HttpMethod.DELETE, entity, String.class);
+        ResponseEntity<String> getFailedApiResponse = restTemplate.exchange(
+                "http://localhost:" + port + "/notesaver/notes/InvalidMail@gmail.com/1/delete",
+                HttpMethod.DELETE, entity, String.class);
+        assertEquals(HttpStatus.OK.value(), getSuccessApiResponse.getStatusCodeValue());
+        assertEquals(HttpStatus.NOT_FOUND.value(), getFailedApiResponse.getStatusCodeValue());
+
     }
 }

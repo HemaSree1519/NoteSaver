@@ -36,10 +36,8 @@ public class Note implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private String title;
 
-    @NotBlank
     private String content;
 
     @NotBlank

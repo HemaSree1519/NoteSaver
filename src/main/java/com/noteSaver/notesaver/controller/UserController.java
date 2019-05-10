@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -20,6 +21,11 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
     // Create a new user
     @PostMapping("/users/add")
@@ -39,5 +45,4 @@ public class UserController {
                 .orElseThrow(() -> new ResourceNotFoundException("user", "id", email));
         return user;
     }
-
 }

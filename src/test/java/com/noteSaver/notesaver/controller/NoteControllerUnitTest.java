@@ -43,16 +43,6 @@ public class NoteControllerUnitTest {
     }
 
     @Test
-    public void whenGetAllNotes_thenReturnListOfNotes() throws Exception {
-        List<Note> list = Arrays.asList(note);
-        when(noteController.getAllNotes()).thenReturn(list);
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/notesaver/notes")
-                .contentType(MediaType.APPLICATION_JSON)).andReturn();
-        System.out.println(mvcResult.getResponse().getContentAsString());
-        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
-    }
-
-    @Test
     public void givenNote_whenAddNote_thenReturnOKResponse() throws Exception {
         when(noteController.createNote(Mockito.any(Note.class))).thenReturn(note);
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -76,10 +66,7 @@ public class NoteControllerUnitTest {
     }
 
     @Test
-    public void givenNoteId_whenGetNoteById_thenReturnNoteWithGivenId() throws Exception {
-        when(noteController.getNoteById((long) 1)).thenReturn(note);
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/notesaver/notes/1")
-                .contentType(MediaType.APPLICATION_JSON)).andReturn();
-        assertEquals(noteJson, mvcResult.getResponse().getContentAsString());
+    public void givenEditedNote_whenUpdateNote_thenReturnSuccessUpdatedResponse(){
+
     }
 }

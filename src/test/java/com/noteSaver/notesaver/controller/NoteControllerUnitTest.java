@@ -66,7 +66,16 @@ public class NoteControllerUnitTest {
     }
 
     @Test
-    public void givenEditedNote_whenUpdateNote_thenReturnSuccessUpdatedResponse() throws Exception {
+    public void givenInvalidEmail_whenGetAllNotesOfUser_thenReturnEmptyList() throws Exception {
+        List<Note> list = Arrays.asList(note);
+        when(noteController.getAllNotesOfUser("tester@gmail.com")).thenReturn(list);
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/notesaver/notes/all/invalid@gmail.com")
+                .contentType(MediaType.APPLICATION_JSON)).andReturn();
+        assertEquals(0, mvcResult.getResponse().getContentLength());
+    }
+
+    @Test
+    public void givenIdAndEditedNote_whenUpdateNote_thenReturnSuccessUpdatedResponse() throws Exception {
         note.setTitle("Updated title");
         String updatedNoteJson = "{\"id\":1,\"title\":\"TestTitle\",\"content\":\"This is a testing note\"," +
                 "\"email\":\"tester@gmail.com\",\"updatedAt\":null,\"createdAt\":null}";

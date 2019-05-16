@@ -32,3 +32,6 @@ HELP.md
 gradle
 out
 application.properties
+/front-end-app/client/node_modules/
+/front-end-app/client/yarn.lock
+/front-end-app/client/package-lock.json

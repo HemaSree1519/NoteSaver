@@ -32,6 +32,3 @@ HELP.md
 gradle
 out
 application.properties
-/src/main/resources/static/client/notesaverapp/node_modules/
-/src/main/resources/static/client/notesaverapp/yarn.lock
-/src/main/resources/static/client/notesaverapp/package-lock.json

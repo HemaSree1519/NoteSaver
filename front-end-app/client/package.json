@@ -39,6 +39,5 @@
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ]
-  },
-  "proxy": "http://localhost:1235"
+  }
 }

@@ -1,7 +1,7 @@
 export const createNote = (note) => {
     return new Promise(async function (resolve, reject) {
         try {
-            const response = await fetch('/notesaver/notes/add', {
+            const response = await fetch('http://localhost:1235/notesaver/notes/add', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -19,7 +19,7 @@ export const createNote = (note) => {
 export const getAllNotesOfUser = (email) => {
     return new Promise(async function (resolve, reject) {
         try {
-            const response = await fetch('/notesaver/notes/all/' + email);
+            const response = await fetch('http://localhost:1235/notesaver/notes/all/' + email);
             const listOfNotes = await response.json();
             resolve(listOfNotes);
         } catch (e) {
@@ -31,7 +31,7 @@ export const getAllNotesOfUser = (email) => {
 export const updateNote = async (id, editedNote) => {
     return new Promise(async function (resolve, reject) {
         try {
-            const response = await fetch('/notesaver/notes/' + id + '/update', {
+            const response = await fetch('http://localhost:1235/notesaver/notes/' + id + '/update', {
                 method: 'PUT',
                 headers: {
                     'Accept': 'application/json',
@@ -49,7 +49,7 @@ export const updateNote = async (id, editedNote) => {
 export const deleteNote = (email, id) => {
     return new Promise(async function (resolve, reject) {
         try {
-            const response = await fetch('/notesaver/notes/' + email + '/' + id + '/delete', {
+            const response = await fetch('http://localhost:1235/notesaver/notes/' + email + '/' + id + '/delete', {
                 method: 'DELETE',
                 headers: {
                     'Accept': 'application/json',

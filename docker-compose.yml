@@ -1,0 +1,26 @@
+version: '3.2'
+services:
+  api1:
+      build: ./
+      tty: true
+  api2:
+      build: ./
+      tty: true
+  api3:
+      build: ./
+      tty: true
+  loadbalancer:
+      build: ./load-balancer
+      tty: true
+      links:
+          - api1
+          - api2
+          - api3
+      ports:
+          - '1235:1235'
+  static:
+      build: ./front-end-app/client
+      tty: true
+      ports:
+          - '3000:3000'
+      command: npm start

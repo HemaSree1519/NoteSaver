@@ -16,8 +16,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost")
 @RestController
-@CrossOrigin("http://localhost:3000")
 @RequestMapping("/notesaver")
 public class UserController {
 

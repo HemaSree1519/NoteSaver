@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost")
 @RestController
-@CrossOrigin("http://localhost:3000")
 @RequestMapping("/notesaver")
 public class NoteController {
 

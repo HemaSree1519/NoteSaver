@@ -29,16 +29,13 @@ export default class Index extends Component {
                             setUser(userEmail);
                             userEmail = '';
                             userPassword = '';
-                            console.log("200 called");
                             this.props.history.push('/notes');
                             break;
                         case 404 :
                             this.setErrorState(true, CODES["102"]);
-                            console.log("404 called");
                             break;
                         default :
                             this.setErrorState(true, CODES["105"]);
-                            console.log("default called");
                             break;
                     }
                 });

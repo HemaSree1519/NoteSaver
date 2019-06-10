@@ -42,7 +42,7 @@ public class UserControllerUnitTest {
     }
 
     @Test
-    public void givenUser_whenAddUser_thenReturnOkResponse() throws Exception {
+    public void givenUser_whenCreateUser_thenReturnOkResponse() throws Exception {
         User user = new User();
         user.setEmail("tester@gmail.com");
         user.setUserName("tester");

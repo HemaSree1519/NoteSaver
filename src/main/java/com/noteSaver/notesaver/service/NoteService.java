@@ -14,11 +14,11 @@ public class NoteService {
     @Autowired
     NoteRepository noteRepository;
 
-    public List<Note> getAllNotesOfUser(String email) {
+    public List<Note> getNotes(String email) {
         return noteRepository.findByEmail(email);
 
     }
-    public Note createNote(Note note) {
+    public Note addNote(Note note) {
 
         return noteRepository.save(note);
     }

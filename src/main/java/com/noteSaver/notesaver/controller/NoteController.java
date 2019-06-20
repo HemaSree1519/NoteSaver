@@ -28,24 +28,25 @@ public class NoteController {
     @Autowired
     NoteService noteService;
 
+    // Get all notes
     @RequestMapping("/notes/all/{email}")
-    public List<Note> getAllNotesOfUser(@PathVariable(value = "email") String email) {
-        return noteService.getAllNotesOfUser(email);
+    public List<Note> getNotes(@PathVariable(value = "email") String email) {
+        return noteService.getNotes(email);
     }
 
-    // Create a new Note
+    // Add a new note
     @PostMapping("/notes/add")
-    public Note createNote(@Valid @RequestBody Note note) {
-        return noteService.createNote(note);
+    public Note addNote(@Valid @RequestBody Note note) {
+        return noteService.addNote(note);
     }
 
-    // Update a Note
+    // Update a note
     @PutMapping("/notes/{id}/update")
     public Note updateNote(@PathVariable(value = "id") Long noteId, @Valid @RequestBody Note noteDetails) {
         return noteService.updateNote(noteId, noteDetails);
     }
 
-    // Delete a Note
+    // Delete a note
     @DeleteMapping("/notes/{email}/{id}/delete")
     public ResponseEntity<?> deleteNote(@PathVariable(value = "id") Long noteId, @PathVariable(value = "email") String email) {
         return noteService.deleteNote(noteId, email);

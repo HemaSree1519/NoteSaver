@@ -33,7 +33,7 @@ export default class Index extends Component {
                 }
             });
         } catch (e) {
-            this.setErrorState(true, CODES["103"])
+            this.setErrorState(true, CODES[103])
         }
     };
     setErrorState = (flag, message) => {

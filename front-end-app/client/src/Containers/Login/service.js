@@ -10,11 +10,12 @@ export const isAuthenticated = (email, password) => {
                         if (user['password'] === password) {
                             resolve(true);
                         }
-                        else resolve(CODES["106"]);
+                        else resolve(CODES[106]);
                     }
-                    else resolve(CODES["107"]);
+                    else resolve(CODES[107]);
                 })
             }
+            else resolve(CODES[108])
         } catch (e) {
             reject(e)
         }

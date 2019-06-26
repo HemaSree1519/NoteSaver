@@ -37,6 +37,8 @@ public class NoteController {
     // Add a new note
     @PostMapping("/notes/add")
     public Note addNote(@Valid @RequestBody Note note) {
+
+        System.out.println("From the controller Hema");
         return noteService.addNote(note);
     }
 

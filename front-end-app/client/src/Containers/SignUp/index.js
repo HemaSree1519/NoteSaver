@@ -31,20 +31,20 @@ export default class Index extends Component {
                             userPassword = '';
                             this.props.history.push('/notes');
                             break;
-                        case 404 :
-                            this.setErrorState(true, CODES["102"]);
+                        case 500 :
+                            this.setErrorState(true, CODES[102]);
                             break;
                         default :
-                            this.setErrorState(true, CODES["105"]);
+                            this.setErrorState(true, CODES[105]);
                             break;
                     }
                 });
             }
             else {
-                this.setErrorState(true, CODES["104"])
+                this.setErrorState(true, CODES[104])
             }
         } catch (e) {
-            this.setErrorState(true, CODES["103"])
+            this.setErrorState(true, CODES[103])
         }
     };
 

@@ -6,5 +6,6 @@ export const CODES = {
     104: "Passwords doesn't match",
     105: "Enter a valid Email",
     106: "Invalid credentials",
-    107: "Email does not exist"
+    107: "Email does not exist",
+    108 : "Please enter the details"
 };

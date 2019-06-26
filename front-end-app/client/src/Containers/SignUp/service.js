@@ -1,5 +1,4 @@
 export const areMatchingPasswords = (password, rePassword) => {
-    console.log("Oroginal: areMart")
     return password === rePassword;
 };
 

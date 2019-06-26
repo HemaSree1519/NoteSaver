@@ -26,7 +26,6 @@ public class UserService {
         if (user.toString().equals("Optional.empty")) {
             return userRepository.save(userDetails);
         } else {
-            System.out.println("Checking the duplicate exception");
             throw new DuplicateEntryException("User", "email", email);
         }
     }

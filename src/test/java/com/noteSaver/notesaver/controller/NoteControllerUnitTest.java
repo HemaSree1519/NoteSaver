@@ -66,8 +66,8 @@ public class NoteControllerUnitTest {
     public void givenValidEmail_whenGetNotes_thenReturnAllNotesOfGivenEmail() throws Exception {
         List<Note> list = Arrays.asList(note);
         when(noteService.getNotes("testMail@gmail.com")).thenReturn(list);
-        List<Note> listFromService = noteService.getNotes("testMail@gmail.com");
-        when(noteController.getNotes("testMail@gmail.com")).thenReturn(listFromService);
+        List<Note> listOfNotesFromService = noteService.getNotes("testMail@gmail.com");
+        when(noteController.getNotes("testMail@gmail.com")).thenReturn(listOfNotesFromService);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/notesaver/notes/all/testMail@gmail.com")
                 .contentType(MediaType.APPLICATION_JSON)).andReturn();
         String expectedJson = "[" + noteJson + "]";
@@ -83,7 +83,6 @@ public class NoteControllerUnitTest {
         when(noteController.getNotes("invalidMail@gmail.com")).thenReturn(emptyListFromService);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/notesaver/notes/all/invalidMail@gmail.com")
                 .contentType(MediaType.APPLICATION_JSON)).andReturn();
-        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
         assertEquals(0, mvcResult.getResponse().getContentLength());
     }
 

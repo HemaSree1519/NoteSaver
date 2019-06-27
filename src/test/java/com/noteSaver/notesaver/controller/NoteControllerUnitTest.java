@@ -2,10 +2,10 @@ package com.noteSaver.notesaver.controller;
 
 import com.noteSaver.notesaver.exception.ResourceNotFoundException;
 import com.noteSaver.notesaver.model.Note;
+import com.noteSaver.notesaver.repository.NoteRepository;
 import com.noteSaver.notesaver.service.NoteService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -20,8 +20,8 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -33,8 +33,10 @@ public class NoteControllerUnitTest {
     private MockMvc mvc;
 
     @MockBean
+    private NoteRepository noteRepository;
+    @MockBean
     private NoteController noteController;
-    @Mock
+    @MockBean
     private NoteService noteService;
     private String noteJson;
     private Note note = new Note();
@@ -50,9 +52,7 @@ public class NoteControllerUnitTest {
 
     @Test
     public void givenNote_whenAddNote_thenReturnSuccessResponse() throws Exception {
-        when(noteService.addNote(note)).thenReturn(note);
-        Note noteFromService = noteService.addNote(note);
-        when(noteController.addNote(Mockito.any(Note.class))).thenReturn(noteFromService);
+        when(noteService.addNote(Mockito.any(Note.class))).thenReturn(note);
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post("/notesaver/notes/add")
                 .accept(MediaType.APPLICATION_JSON).content(noteJson)
@@ -66,8 +66,6 @@ public class NoteControllerUnitTest {
     public void givenValidEmail_whenGetNotes_thenReturnAllNotesOfGivenEmail() throws Exception {
         List<Note> list = Arrays.asList(note);
         when(noteService.getNotes("testMail@gmail.com")).thenReturn(list);
-        List<Note> listOfNotesFromService = noteService.getNotes("testMail@gmail.com");
-        when(noteController.getNotes("testMail@gmail.com")).thenReturn(listOfNotesFromService);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/notesaver/notes/all/testMail@gmail.com")
                 .contentType(MediaType.APPLICATION_JSON)).andReturn();
         String expectedJson = "[" + noteJson + "]";
@@ -77,10 +75,8 @@ public class NoteControllerUnitTest {
 
     @Test
     public void givenInvalidEmail_whenGetNotes_thenReturnEmptyList() throws Exception {
-        List<Note> emptyList = Arrays.asList();
+        List<Note> emptyList = Collections.emptyList();
         when(noteService.getNotes("invalidMail@gmail.com")).thenReturn(emptyList);
-        List<Note> emptyListFromService = noteService.getNotes("invalidMail@gmail.com");
-        when(noteController.getNotes("invalidMail@gmail.com")).thenReturn(emptyListFromService);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/notesaver/notes/all/invalidMail@gmail.com")
                 .contentType(MediaType.APPLICATION_JSON)).andReturn();
         assertEquals(0, mvcResult.getResponse().getContentLength());
@@ -92,8 +88,6 @@ public class NoteControllerUnitTest {
         String updatedNoteJson = "{\"id\":1,\"title\":\"TestTitle\",\"content\":\"This is a testing note\"," +
                 "\"email\":\"tester@gmail.com\",\"updatedAt\":null,\"createdAt\":null}";
         when(noteService.updateNote((long) 1, note)).thenReturn(note);
-        Note updatedNoteFromService = noteService.updateNote((long) 1, note);
-        when(noteController.updateNote((long) 1, note)).thenReturn(updatedNoteFromService);
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .put("/notesaver/notes/1/update")
                 .accept(MediaType.APPLICATION_JSON).content(updatedNoteJson)
@@ -105,9 +99,9 @@ public class NoteControllerUnitTest {
     @Test
     public void givenInvalidIdAndEditedNote_whenUpdateNote_thenThrowExceptionOrEmptyNote() throws Exception {
         note.setTitle("Updated title");
-        String updatedNoteJson = "{\"id\":1,\"title\":\"TestTitle\",\"content\":\"This is a testing note\"," +
+        String updatedNoteJson = "{\"id\":5,\"title\":\"Updated title\",\"content\":\"This is a testing note\"," +
                 "\"email\":\"tester@gmail.com\",\"updatedAt\":null,\"createdAt\":null}";
-        when(noteController.updateNote((long) 5, note)).thenThrow(new ResourceNotFoundException("Note", "id", "5"));
+        when(noteService.updateNote((long) 5, note)).thenThrow(new ResourceNotFoundException("Note", "id", "5"));
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .put("/notesaver/notes/5/update")
                 .accept(MediaType.APPLICATION_JSON).content(updatedNoteJson)
@@ -120,9 +114,6 @@ public class NoteControllerUnitTest {
     public void givenValidIdAndEmail_whenDeleteNote_thenReturnSuccessResponse() throws Exception {
         when(noteService.deleteNote((long) 1, "tester@gmail.com"))
                 .thenReturn(ResponseEntity.ok().build());
-        ResponseEntity deleteStatus = noteService.deleteNote((long) 1, "tester@gmail.com");
-        when(noteController.deleteNote((long) 1, "tester@gmail.com"))
-                .thenReturn(deleteStatus);
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .delete("/notesaver/notes/tester@gmail.com/1/delete");
         MvcResult result = mvc.perform(requestBuilder).andReturn();
@@ -130,12 +121,12 @@ public class NoteControllerUnitTest {
     }
 
     @Test
-    public void givenInvalidId_whenDeleteNote_thenThrowException() throws Exception {
-        when(noteController.deleteNote((long) 2, "tester@gmail.com"))
+    public void givenInvalidId_whenDeleteNote_thenThrowExceptionOrEmptyResponse() throws Exception {
+        when(noteService.deleteNote((long) 2, "tester@gmail.com"))
                 .thenThrow(new ResourceNotFoundException("Note", "id", "2"));
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .delete("/notesaver/notes/tester@gmail.com/2/delete");
         MvcResult result = mvc.perform(requestBuilder).andReturn();
-        assertEquals("Note not found with id : '2'", Objects.requireNonNull(result.getResolvedException()).getMessage());
+        assertEquals("",result.getResponse().getContentAsString());
     }
 }

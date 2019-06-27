@@ -3,6 +3,7 @@ package com.noteSaver.notesaver.controller;
 import com.noteSaver.notesaver.exception.DuplicateEntryException;
 import com.noteSaver.notesaver.exception.ResourceNotFoundException;
 import com.noteSaver.notesaver.model.User;
+import com.noteSaver.notesaver.repository.UserRepository;
 import com.noteSaver.notesaver.service.UserService;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -34,7 +35,7 @@ public class UserControllerUnitTest {
     @Autowired
     private MockMvc mvc;
     @MockBean
-    private UserController userController;
+    private UserRepository userRepository;
     @MockBean
     private UserService userService;
     private User user = new User();
@@ -51,8 +52,6 @@ public class UserControllerUnitTest {
     @Test
     public void givenValidUserEmail_whenGetUser_thenReturnUser() throws Exception {
         when(userService.getUser("testMail@gmail.com")).thenReturn(user);
-        User userFromService = userService.getUser("testMail@gmail.com");
-        when(userController.getUser("testMail@gmail.com")).thenReturn(userFromService);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/notesaver/users/testMail@gmail.com")
                 .contentType(MediaType.APPLICATION_JSON)).andReturn();
         String expectedResult = "{\"userName\":tester,\"password\":password,\"email\":\"testMail@gmail.com\",\"role\":admin}";
@@ -61,19 +60,18 @@ public class UserControllerUnitTest {
     }
 
     @Test
-    public void givenInvalidUserEmail_whenGetUser_thenReturnEmptyUser() throws Exception {
-        when(userController.getUser("invalidMail@gmail.com"))
-                .thenThrow(new ResourceNotFoundException("user", "id", "invalidMail@gmail.com"));
+    public void givenInvalidUserEmail_whenGetUser_thenThrowException() throws Exception {
+        when(userService.getUser("invalidMail@gmail.com"))
+                .thenThrow(new ResourceNotFoundException("User", "email", "invalidMail@gmail.com"));
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/notesaver/users/invalidMail@gmail.com")
                 .contentType(MediaType.APPLICATION_JSON)).andReturn();
-        Assertions.assertEquals("", mvcResult.getResponse().getContentAsString());
+        String expectedException = "User not found with email : 'invalidMail@gmail.com'";
+        Assertions.assertEquals(expectedException, Objects.requireNonNull(mvcResult.getResolvedException()).getMessage());
     }
 
     @Test
     public void givenUser_whenAddUser_thenReturnOkResponse() throws Exception {
         when(userService.addUser(Mockito.any(User.class))).thenReturn(user);
-        User userFromService = userService.addUser(user);
-        when(userController.addUser(Mockito.any(User.class))).thenReturn(userFromService);
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post("/notesaver/users/add")
                 .accept(MediaType.APPLICATION_JSON).content(userJson)
@@ -85,7 +83,7 @@ public class UserControllerUnitTest {
 
     @Test
     public void givenDuplicateUser_whenAddUser_thenThrowException() throws Exception {
-        when(userController.addUser(Mockito.any(User.class)))
+        when(userService.addUser(Mockito.any(User.class)))
                 .thenThrow(new DuplicateEntryException("User", "email", "duplicateMail@gmail.com"));
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post("/notesaver/users/add")
@@ -100,8 +98,6 @@ public class UserControllerUnitTest {
     public void whenGetUsers_thenReturnListOfUsers() throws Exception {
         List<User> list = Arrays.asList(user);
         when(userService.getUsers()).thenReturn(list);
-        List<User> listOfUsersFromService = userService.getUsers();
-        when(userController.getUsers()).thenReturn(listOfUsersFromService);
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/notesaver/users")
                 .contentType(MediaType.APPLICATION_JSON)).andReturn();
         String expectedJson = "[" + userJson + "]";

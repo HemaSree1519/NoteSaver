@@ -19,7 +19,6 @@ public class NoteService {
 
     }
     public Note addNote(Note note) {
-
         return noteRepository.save(note);
     }
     public Note updateNote(Long noteId,Note noteDetails) {

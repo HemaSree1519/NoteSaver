@@ -25,6 +25,7 @@ public class NoteService {
 
         Note note = noteRepository.findById(noteId)
                 .orElseThrow(() -> new ResourceNotFoundException("Note", "id", noteId));
+        System.out.println(note);
         note.setTitle(noteDetails.getTitle());
         note.setContent(noteDetails.getContent());
         note.setUpdatedAt(noteDetails.getUpdatedAt());
